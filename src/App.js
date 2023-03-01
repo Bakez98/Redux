@@ -26,8 +26,10 @@ function App() {
   return (
     <div className="App">
         {`Count : ${values.count} `}
+        <div className='wrapper'>
         <button onClick={() => handleIncrement()}>INCREMENT</button>
         <button onClick={() => handleDECREMENT()}>DECREMENT</button>
+        </div>
     </div>
   );
 }
