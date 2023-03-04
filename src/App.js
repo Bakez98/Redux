@@ -1,35 +1,43 @@
-import './App.css';
+import "./App.css";
 // import { store } from './store';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 function App() {
+  const { users, loading, error } = useSelector((state) => state.UserReducer);
+  const dispatch = useDispatch();
 
-  const values = useSelector(state => state.myReducer)
-  const dispatch = useDispatch()
-
-  function handleIncrement() {
+  async function fetchData() {
     dispatch({
-      type:"INCREMENT",
-      payload: 20
-      })
+      type: "FETCH_LOADING",
+    });
+
+    try {
+      const responce = await fetch(
+        "https://jsonplaceholder.typicode.com/users"
+      );
+      const FetchedUsers = await responce.json();
+
+      dispatch({
+        type: "FETCH_SUCCESS",
+        payload: FetchedUsers,
+      });
+    } catch (error) {
+      dispatch({
+        type: "FETCH_ERROR",
+      });
+    }
   }
 
+  if (loading) return "Loading ...............";
 
-  function handleDECREMENT() {
-    dispatch({
-      type:"DECREMENT",
-      payload: 20
-      })
-  }
+  if (error) return "Error Fetching ";
 
-  console.log(values.count)
   return (
     <div className="App">
-        {`Count : ${values.count} `}
-        <div className='wrapper'>
-        <button onClick={() => handleIncrement()}>INCREMENT</button>
-        <button onClick={() => handleDECREMENT()}>DECREMENT</button>
-        </div>
+      <button onClick={() => fetchData()}>Fetch Users </button>
+      {users.map((user) => {
+        return <div key={user.id}>{user.name}</div>;
+      })}
     </div>
   );
 }

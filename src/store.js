@@ -4,22 +4,26 @@ import { createStore } from "redux";
 import { combineReducers } from "redux";
 
 const initialState = {
-  count: 0,
+  users: [],
+  loading : false,
+  error: null
 };
 
-const myReducer = (state = initialState, action) => {
+const UserReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "INCREMENT":
-      return { ...state, count: state.count + action.payload };
-    case "DECREMENT":
-      return { ...state, count: state.count - action.payload };
+    case "FETCH_LOADING":
+      return { ...state,loading: true };
+    case "FETCH_ERROR":
+      return { ...state,loading:false, error: true };
+    case "FETCH_SUCCESS":
+      return { ...state, loading: false, users: action.payload };
     default:
       return state;
   }
 };
 
 const Allreducers = combineReducers({
-  myReducer,
+  UserReducer,
 });
 const store = createStore(Allreducers);
 
